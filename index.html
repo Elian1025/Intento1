@@ -1,1 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro Nacional de Flores - Postcosecha BLOOMS LEGACY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="logo-brand">
+          <span class="logo-mark">B</span>
+          <div>
+            <p class="logo-subtitle">Blooms Legacy</p>
+            <span class="brand-label">POSTCOSECHA</span>
+          </div>
+        </div>
+        <h1>Registro Nacional de Rosas Blooms Legacy</h1>
+        <p>Control profesional de flores nacionales durante el proceso de postcosecha.</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="badge">Modo oscuro</span>
+        <button id="btnClearAll" class="btn-secondary"><i class="fa-solid fa-trash-can"></i> Borrar todos</button>
+      </div>
+    </header>
 
+    <section class="grid dashboard-cards" aria-label="Panel de control">
+      <article class="card glass-card">
+        <p class="card-title">Fecha actual</p>
+        <h2 id="currentDate">--</h2>
+      </article>
+      <article class="card glass-card">
+        <p class="card-title">Hora actual</p>
+        <h2 id="currentTime">--</h2>
+      </article>
+      <article class="card glass-card">
+        <p class="card-title">Total de registros</p>
+        <h2 id="totalRecords">0</h2>
+      </article>
+      <article class="card glass-card">
+        <p class="card-title">Total de variedades</p>
+        <h2 id="totalVarieties">0</h2>
+      </article>
+      <article class="card glass-card">
+        <p class="card-title">Total de tallos</p>
+        <h2 id="totalStems">0</h2>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel glass-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Registrar nacional</h2>
+            <p>Registro rápido y seguro para flores nacionales de postcosecha.</p>
+          </div>
+          <span class="panel-tag">Formulario</span>
+        </div>
+
+        <form id="recordForm" class="form-grid">
+          <label>
+            Fecha
+            <input type="date" id="recordDate" required />
+          </label>
+          <label>
+            Variedad
+            <input type="text" id="recordVariety" placeholder="Ej: Avalanche" required />
+          </label>
+          <label>
+            Cantidad de flores
+            <input type="number" id="recordQuantity" min="1" placeholder="0" required />
+          </label>
+          <label>
+            Motivo nacional
+            <select id="recordReason" required>
+              <option value="" disabled selected>Selecciona un motivo</option>
+              <option value="Descabezado">Descabezado</option>
+              <option value="Maltrato">Maltrato</option>
+              <option value="Daño mecánico">Daño mecánico</option>
+              <option value="Botrytis">Botrytis</option>
+              <option value="Tallo torcido">Tallo torcido</option>
+              <option value="Flor abierta">Flor abierta</option>
+              <option value="Pétalos dañados">Pétalos dañados</option>
+              <option value="Golpe">Golpe</option>
+              <option value="Tallo corto">Tallo corto</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </label>
+          <label id="customReasonContainer" class="hidden">
+            Especificar motivo
+            <input type="text" id="customReason" placeholder="Describe el motivo" />
+          </label>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Guardar Registro</button>
+        </form>
+      </article>
+
+      <article class="panel glass-panel quick-search">
+        <div class="panel-header">
+          <div>
+            <h2>Consulta rápida</h2>
+            <p>Ingresa fecha y variedad para recuperar el registro inmediatamente.</p>
+          </div>
+          <span class="panel-tag">Búsqueda</span>
+        </div>
+
+        <div class="inline-grid">
+          <label>
+            Fecha
+            <input type="date" id="quickDate" />
+          </label>
+          <label>
+            Variedad
+            <input type="text" id="quickVariety" placeholder="Ej: Avalanche" />
+          </label>
+        </div>
+        <button id="btnQuickSearch" class="btn-secondary"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+
+        <div class="quick-result glass-card" id="quickResult" aria-live="polite">
+          <p class="muted">Resultados rápidos aparecerán aquí.</p>
+          <div class="quick-result-grid hidden" id="quickResultData">
+            <div><strong>Fecha</strong><span id="quickDateResult">-</span></div>
+            <div><strong>Variedad</strong><span id="quickVarietyResult">-</span></div>
+            <div><strong>Cantidad</strong><span id="quickQuantityResult">-</span></div>
+            <div><strong>Motivo</strong><span id="quickReasonResult">-</span></div>
+          </div>
+        </div>
+
+        <div class="filter-buttons">
+          <button data-filter="today" class="filter-btn active">Hoy</button>
+          <button data-filter="week" class="filter-btn">Esta semana</button>
+          <button data-filter="month" class="filter-btn">Este mes</button>
+          <button data-filter="all" class="filter-btn">Todas las fechas</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel glass-panel history-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Historial</h2>
+            <p>Busca, edita y administra tus registros nacionales.</p>
+          </div>
+          <span class="panel-tag">Registros</span>
+        </div>
+
+        <div class="history-actions">
+          <label class="search-label">
+            <i class="fa-solid fa-search"></i>
+            <input id="historySearch" type="search" placeholder="Buscar por fecha, variedad o motivo" />
+          </label>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="historyTable">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Variedad</th>
+                <th>Cantidad</th>
+                <th>Motivo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel glass-panel stats-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Estadísticas</h2>
+            <p>Información clave para decisiones rápidas y operativas.</p>
+          </div>
+          <span class="panel-tag">Análisis</span>
+        </div>
+
+        <div class="grid stats-grid">
+          <article class="small-card">
+            <p>Total de flores nacionales</p>
+            <h3 id="statTotalFlowers">0</h3>
+          </article>
+          <article class="small-card">
+            <p>Cantidad por variedad</p>
+            <h3 id="statByVariety">-</h3>
+          </article>
+          <article class="small-card">
+            <p>Cantidad por motivo</p>
+            <h3 id="statByReason">-</h3>
+          </article>
+          <article class="small-card">
+            <p>Variedad más frecuente</p>
+            <h3 id="statTopVariety">-</h3>
+          </article>
+          <article class="small-card">
+            <p>Motivo más frecuente</p>
+            <h3 id="statTopReason">-</h3>
+          </article>
+          <article class="small-card">
+            <p>Mayor daño hoy</p>
+            <h3 id="statTopDailyReason">-</h3>
+          </article>
+          <article class="small-card">
+            <p>% del total hoy</p>
+            <h3 id="statTopDailyPercent">-</h3>
+          </article>
+          <article class="small-card">
+            <p>Cantidad hoy</p>
+            <h3 id="statTopDailyQuantity">0</h3>
+          </article>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card glass-card">
+            <h3>Flores por variedad</h3>
+            <canvas id="varietyChart"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <h3>Motivos nacionales</h3>
+            <canvas id="reasonChart"></canvas>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel glass-panel backup-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Respaldo y exportación</h2>
+          <p>Guarda tus datos y comparte informes con facilidad.</p>
+        </div>
+        <span class="panel-tag">Backup</span>
+      </div>
+
+      <div class="backup-actions">
+        <button id="btnExportExcel" class="btn-secondary"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button>
+        <button id="btnExportPdf" class="btn-secondary"><i class="fa-solid fa-file-pdf"></i> Exportar a PDF</button>
+        <button id="btnCreateBackup" class="btn-secondary"><i class="fa-solid fa-download"></i> Crear respaldo</button>
+        <button id="btnImportBackup" class="btn-secondary"><i class="fa-solid fa-upload"></i> Importar respaldo</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" class="hidden" />
+    </section>
+
+    <div id="toast" class="toast hidden"></div>
+    <footer class="site-footer">Página hecha por Elian Tituaña para pruebas y mejoras</footer>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
