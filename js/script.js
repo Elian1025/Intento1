@@ -405,8 +405,10 @@ btnClearAll.addEventListener('click', () => {
 /**
  * Inicializa la aplicación y sus estados.
  */
-function initApp() {
+async function initApp() {
   setDefaultDate();
+  initializeRemoteDatabase();
+  await syncRemoteToLocal();
   loadAppData();
   updateClock();
   setInterval(updateClock, 1000);

@@ -3,6 +3,36 @@
 */
 
 const STORAGE_KEY = 'rosas_nacionales_records';
+const FIREBASE_CONFIG = {
+  apiKey: '',
+  authDomain: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: ''
+};
+let remoteEnabled = false;
+let firestoreDb = null;
+
+/**
+ * Inicializa Firebase Firestore si se configura correctamente.
+ */
+function initializeRemoteDatabase() {
+  const isConfigured = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.appId;
+  if (!isConfigured || typeof firebase === 'undefined') {
+    remoteEnabled = false;
+    return;
+  }
+
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    firestoreDb = firebase.firestore();
+    remoteEnabled = true;
+  } catch (error) {
+    console.warn('No se pudo inicializar Firebase:', error);
+    remoteEnabled = false;
+  }
+}
 
 /**
  * Obtiene los registros guardados en LocalStorage.
@@ -14,11 +44,61 @@ function loadRecords() {
 }
 
 /**
+ * Carga los registros remotos de Firestore y los guarda en local.
+ * @returns {Promise<void>}
+ */
+async function syncRemoteToLocal() {
+  if (!remoteEnabled || !firestoreDb) return;
+
+  try {
+    const snapshot = await firestoreDb.collection('rosas_nacionales').get();
+    const records = snapshot.docs.map((doc) => doc.data());
+    saveRecords(records);
+  } catch (error) {
+    console.warn('Error sincronizando datos remotos:', error);
+  }
+}
+
+/**
+ * Sincroniza todos los registros locales hacia Firestore.
+ * @param {Array<Object>} records Lista de registros.
+ * @returns {Promise<void>}
+ */
+async function syncLocalToRemote(records) {
+  if (!remoteEnabled || !firestoreDb) return;
+
+  try {
+    const collectionRef = firestoreDb.collection('rosas_nacionales');
+    const snapshot = await collectionRef.get();
+    const batch = firestoreDb.batch();
+    const remoteIds = snapshot.docs.map((doc) => doc.id);
+
+    records.forEach((record) => {
+      const docRef = collectionRef.doc(record.id);
+      batch.set(docRef, record);
+    });
+
+    remoteIds.forEach((id) => {
+      if (!records.some((record) => record.id === id)) {
+        batch.delete(collectionRef.doc(id));
+      }
+    });
+
+    await batch.commit();
+  } catch (error) {
+    console.warn('Error sincronizando datos locales a remoto:', error);
+  }
+}
+
+/**
  * Guarda la lista de registros en LocalStorage.
  * @param {Array<Object>} records Lista de registros.
  */
 function saveRecords(records) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  if (remoteEnabled) {
+    syncLocalToRemote(records);
+  }
 }
 
 /**
