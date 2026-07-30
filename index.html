@@ -32,7 +32,7 @@
       </div>
       <div class="topbar-actions">
         <span class="badge">Modo oscuro</span>
-        <span id="remoteStatus" class="badge remote-status">Sincronización remota no configurada</span>
+        <span id="remoteStatus" class="badge remote-status hidden"></span>
         <button id="btnClearAll" class="btn-secondary"><i class="fa-solid fa-trash-can"></i> Borrar todos</button>
       </div>
     </header>
@@ -251,6 +251,37 @@
         <button id="btnExportPdf" class="btn-secondary"><i class="fa-solid fa-file-pdf"></i> Exportar a PDF</button>
         <button id="btnCreateBackup" class="btn-secondary"><i class="fa-solid fa-download"></i> Crear respaldo</button>
         <button id="btnImportBackup" class="btn-secondary"><i class="fa-solid fa-upload"></i> Importar respaldo</button>
+      </div>
+      <div class="config-panel glass-card">
+        <h3>Configuración remota</h3>
+        <p>Pega tu configuración de Firebase para sincronizar datos entre dispositivos.</p>
+        <div class="config-grid">
+          <label>
+            apiKey
+            <input type="text" id="firebaseApiKey" placeholder="Tu apiKey" />
+          </label>
+          <label>
+            authDomain
+            <input type="text" id="firebaseAuthDomain" placeholder="Tu authDomain" />
+          </label>
+          <label>
+            projectId
+            <input type="text" id="firebaseProjectId" placeholder="Tu projectId" />
+          </label>
+          <label>
+            storageBucket
+            <input type="text" id="firebaseStorageBucket" placeholder="Tu storageBucket" />
+          </label>
+          <label>
+            messagingSenderId
+            <input type="text" id="firebaseMessagingSenderId" placeholder="Tu messagingSenderId" />
+          </label>
+          <label>
+            appId
+            <input type="text" id="firebaseAppId" placeholder="Tu appId" />
+          </label>
+        </div>
+        <button id="btnSaveRemoteConfig" class="btn-secondary"><i class="fa-solid fa-cloud-arrow-up"></i> Guardar configuración remota</button>
       </div>
       <input type="file" id="importFile" accept="application/json" class="hidden" />
     </section>

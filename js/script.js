@@ -25,6 +25,13 @@ const btnCreateBackup = document.getElementById('btnCreateBackup');
 const btnImportBackup = document.getElementById('btnImportBackup');
 const importFile = document.getElementById('importFile');
 const btnClearAll = document.getElementById('btnClearAll');
+const btnSaveRemoteConfig = document.getElementById('btnSaveRemoteConfig');
+const firebaseApiKey = document.getElementById('firebaseApiKey');
+const firebaseAuthDomain = document.getElementById('firebaseAuthDomain');
+const firebaseProjectId = document.getElementById('firebaseProjectId');
+const firebaseStorageBucket = document.getElementById('firebaseStorageBucket');
+const firebaseMessagingSenderId = document.getElementById('firebaseMessagingSenderId');
+const firebaseAppId = document.getElementById('firebaseAppId');
 const toast = document.getElementById('toast');
 const currentDate = document.getElementById('currentDate');
 const currentTime = document.getElementById('currentTime');
@@ -325,6 +332,34 @@ historySearch.addEventListener('input', () => {
   renderHistory(loadRecords());
 });
 
+btnSaveRemoteConfig.addEventListener('click', () => {
+  const config = {
+    apiKey: firebaseApiKey.value.trim(),
+    authDomain: firebaseAuthDomain.value.trim(),
+    projectId: firebaseProjectId.value.trim(),
+    storageBucket: firebaseStorageBucket.value.trim(),
+    messagingSenderId: firebaseMessagingSenderId.value.trim(),
+    appId: firebaseAppId.value.trim(),
+  };
+
+  if (!config.apiKey || !config.projectId || !config.appId) {
+    showToast('Completa apiKey, projectId y appId para activar la sincronización.');
+    return;
+  }
+
+  saveRemoteConfig(config);
+  initializeRemoteDatabase();
+  if (remoteEnabled) {
+    syncRemoteToLocal().then(() => {
+      loadAppData();
+      setRemoteStatus();
+      showToast('Configuración remota guardada y sincronizada.');
+    });
+  } else {
+    showToast('No se pudo activar la sincronización remota. Revisa tu configuración.');
+  }
+});
+
 /**
  * Exporta los datos a un archivo Excel.
  */
@@ -406,8 +441,20 @@ btnClearAll.addEventListener('click', () => {
 /**
  * Inicializa la aplicación y sus estados.
  */
+function populateRemoteConfigInputs() {
+  const config = loadRemoteConfig();
+  if (!config) return;
+  firebaseApiKey.value = config.apiKey || '';
+  firebaseAuthDomain.value = config.authDomain || '';
+  firebaseProjectId.value = config.projectId || '';
+  firebaseStorageBucket.value = config.storageBucket || '';
+  firebaseMessagingSenderId.value = config.messagingSenderId || '';
+  firebaseAppId.value = config.appId || '';
+}
+
 async function initApp() {
   setDefaultDate();
+  populateRemoteConfigInputs();
   initializeRemoteDatabase();
   await syncRemoteToLocal();
   setRemoteStatus();
@@ -420,9 +467,11 @@ function setRemoteStatus() {
   if (typeof remoteEnabled !== 'undefined' && remoteEnabled) {
     remoteStatus.textContent = 'Sincronización remota activa';
     remoteStatus.classList.add('active');
+    remoteStatus.classList.remove('hidden');
   } else {
-    remoteStatus.textContent = 'Sincronización remota no configurada';
+    remoteStatus.textContent = '';
     remoteStatus.classList.remove('active');
+    remoteStatus.classList.add('hidden');
   }
 }
 

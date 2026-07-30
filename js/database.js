@@ -3,29 +3,46 @@
 */
 
 const STORAGE_KEY = 'rosas_nacionales_records';
-const FIREBASE_CONFIG = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: ''
-};
+const REMOTE_CONFIG_KEY = 'rosas_nacionales_remote_config';
 let remoteEnabled = false;
 let firestoreDb = null;
+
+/**
+ * Lee la configuración remota guardada en LocalStorage.
+ * @returns {Object|null}
+ */
+function loadRemoteConfig() {
+  const data = localStorage.getItem(REMOTE_CONFIG_KEY);
+  try {
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Guarda la configuración remota en LocalStorage.
+ * @param {Object} config
+ */
+function saveRemoteConfig(config) {
+  localStorage.setItem(REMOTE_CONFIG_KEY, JSON.stringify(config));
+}
 
 /**
  * Inicializa Firebase Firestore si se configura correctamente.
  */
 function initializeRemoteDatabase() {
-  const isConfigured = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.appId;
+  const config = loadRemoteConfig();
+  const isConfigured = config && config.apiKey && config.projectId && config.appId;
   if (!isConfigured || typeof firebase === 'undefined') {
     remoteEnabled = false;
     return;
   }
 
   try {
-    firebase.initializeApp(FIREBASE_CONFIG);
+    if (!firebase.apps || !firebase.apps.length) {
+      firebase.initializeApp(config);
+    }
     firestoreDb = firebase.firestore();
     remoteEnabled = true;
   } catch (error) {
@@ -138,7 +155,7 @@ function deleteRecord(id) {
  * Borra todos los registros.
  */
 function clearAllRecords() {
-  localStorage.removeItem(STORAGE_KEY);
+  saveRecords([]);
 }
 
 /**
