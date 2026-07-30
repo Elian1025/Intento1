@@ -40,6 +40,7 @@ const statTopDailyReason = document.getElementById('statTopDailyReason');
 const statTopDailyPercent = document.getElementById('statTopDailyPercent');
 const statTopDailyQuantity = document.getElementById('statTopDailyQuantity');
 const historySearch = document.getElementById('historySearch');
+const remoteStatus = document.getElementById('remoteStatus');
 
 let currentEditId = null;
 let currentFilter = 'today';
@@ -409,9 +410,20 @@ async function initApp() {
   setDefaultDate();
   initializeRemoteDatabase();
   await syncRemoteToLocal();
+  setRemoteStatus();
   loadAppData();
   updateClock();
   setInterval(updateClock, 1000);
+}
+
+function setRemoteStatus() {
+  if (typeof remoteEnabled !== 'undefined' && remoteEnabled) {
+    remoteStatus.textContent = 'Sincronización remota activa';
+    remoteStatus.classList.add('active');
+  } else {
+    remoteStatus.textContent = 'Sincronización remota no configurada';
+    remoteStatus.classList.remove('active');
+  }
 }
 
 initApp();

@@ -11,21 +11,28 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="page-decorations">
+    <span class="rose-floating rose-1"><i class="fa-solid fa-rose"></i></span>
+    <span class="rose-floating rose-2"><i class="fa-solid fa-rose"></i></span>
+    <span class="rose-floating rose-3"><i class="fa-solid fa-rose"></i></span>
+    <span class="rose-floating rose-4"><i class="fa-solid fa-rose"></i></span>
+  </div>
   <main class="app-shell">
     <header class="topbar">
       <div class="brand-block">
         <div class="logo-brand">
           <span class="logo-mark">B</span>
           <div>
-            <p class="logo-subtitle">Blooms Legacy</p>
+            <p class="logo-subtitle">BLOOMS LEGACY</p>
             <span class="brand-label">POSTCOSECHA</span>
           </div>
         </div>
-        <h1>Registro Nacional de Rosas Blooms Legacy</h1>
-        <p>Control profesional de flores nacionales durante el proceso de postcosecha.</p>
+        <h1>Registro Nacional de Rosas BLOOMS LEGACY</h1>
+        <p>Control de flores nacionales durante el proceso de postcosecha.</p>
       </div>
       <div class="topbar-actions">
         <span class="badge">Modo oscuro</span>
+        <span id="remoteStatus" class="badge remote-status">Sincronización remota no configurada</span>
         <button id="btnClearAll" class="btn-secondary"><i class="fa-solid fa-trash-can"></i> Borrar todos</button>
       </div>
     </header>
@@ -122,7 +129,7 @@
         <button id="btnQuickSearch" class="btn-secondary"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
 
         <div class="quick-result glass-card" id="quickResult" aria-live="polite">
-          <p class="muted">Resultados rápidos aparecerán aquí.</p>
+          <p class="muted">Resultados rápidos.</p>
           <div class="quick-result-grid hidden" id="quickResultData">
             <div><strong>Fecha</strong><span id="quickDateResult">-</span></div>
             <div><strong>Variedad</strong><span id="quickVarietyResult">-</span></div>
@@ -177,7 +184,7 @@
         <div class="panel-header">
           <div>
             <h2>Estadísticas</h2>
-            <p>Información clave para decisiones rápidas y operativas.</p>
+            <p>Información para analisis de Enfermedad y toma de decisiones.</p>
           </div>
           <span class="panel-tag">Análisis</span>
         </div>
@@ -234,7 +241,7 @@
       <div class="panel-header">
         <div>
           <h2>Respaldo y exportación</h2>
-          <p>Guarda tus datos y comparte informes con facilidad.</p>
+          <p>Guarda los datos y podras compartir el informe.</p>
         </div>
         <span class="panel-tag">Backup</span>
       </div>

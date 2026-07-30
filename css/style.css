@@ -23,6 +23,69 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   background: radial-gradient(circle at top, rgba(177, 26, 32, 0.14), transparent 38%), #050505;
   color: var(--text);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.page-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.rose-floating {
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.14);
+  position: absolute;
+  opacity: 0.8;
+  animation: float-rose 12s ease-in-out infinite;
+}
+
+.rose-floating i {
+  font-size: 3.25rem;
+}
+
+.rose-1 {
+  top: 10%;
+  left: 8%;
+  animation-duration: 14s;
+}
+
+.rose-2 {
+  top: 30%;
+  right: 10%;
+  animation-duration: 11s;
+  animation-delay: 2s;
+}
+
+.rose-3 {
+  bottom: 18%;
+  left: 20%;
+  animation-duration: 16s;
+  animation-delay: 1s;
+}
+
+.rose-4 {
+  bottom: 12%;
+  right: 18%;
+  animation-duration: 13s;
+  animation-delay: 3s;
+}
+
+@keyframes float-rose {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.75; }
+  50% { transform: translateY(-18px) scale(1.08); opacity: 0.95; }
+}
+
+.app-shell {
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 24px 0 64px;
+  position: relative;
+  z-index: 1;
 }
 
 img {
@@ -142,6 +205,16 @@ button {
 .btn-secondary:hover {
   transform: translateY(-1px);
   filter: brightness(1.05);
+}
+
+.remote-status {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffb3b3;
+}
+
+.remote-status.active {
+  background: rgba(26, 148, 88, 0.18);
+  color: #8df4a7;
 }
 
 .grid,
